@@ -1,39 +1,7 @@
 import streamlit as st
-import math
 from htbuilder import HtmlElement, div, hr, a, p, styles
 from htbuilder.units import percent, px
-
-
-# Title & Subtitle
-title = '<p style="font-size: 42px">Germination Calculator</p>'
-subtitle = '<p style="font-size: 24px, color:#3e4a41''">caculate the number of seeds needed for your garden</p>'
-st.markdown(title, unsafe_allow_html=True)
-st.markdown(subtitle, unsafe_allow_html=True)
-
-# setup columns to make input boxes smaller
-row_input = st.columns([0.5, 0.5])
-
-# input
-with row_input[0]:
-    desired_plants = st.number_input('Enter the number of seedlings you want', min_value=1, max_value=1000, value=1)
-
-prompt1 = '<p style="font-size: 10px, color:#c4c4c4">Any numbers larger than 250 will take exponentially longer to compute</p>'
-st.markdown(prompt1, unsafe_allow_html=True)
-
-
-with row_input[0]:
-    germination_rate = st.number_input('Enter the germination rate of the seeds', min_value=0.0, max_value=1.0, value=0.6)
-
-prompt2_1 = '<p style="font-size: 18px, color:Grey">If 60%, enter 0.60</p>'
-st.markdown(prompt2_1, unsafe_allow_html=True)
-
-
-with row_input[0]:
-    confidence_interval = st.number_input('Enter the confidence interval', min_value=0.0, max_value=1.0, value=0.95)
-
-prompt3_1 = '<p style="font-size: 18px, color:Gray">Recommended: 95%, the closer to 100%, the slower you will get your result.</p>'
-st.markdown(prompt3_1, unsafe_allow_html=True)
-
+import math
 
 @st.cache_data
 def get_seed_count(p, k, confidence):
@@ -57,14 +25,134 @@ def get_seed_count(p, k, confidence):
         n += 1
 
     seeds = n - 1
-    final_probability = round(inv_prob, 4)
 
-    return seeds, final_probability
+    return seeds, inv_prob
+
+
+# Background
+st.markdown(
+    """
+    <style>
+        .stApp {
+            background-image: url(https://i.postimg.cc/jdsrt0B8/app-background-opaque.png);
+            background-size: cover;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 42px;
+            font-weight:600;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 18px;
+            font-style: italic;
+            font-weight:300;
+            line-height: 0.5;
+            color: darkgreen;
+        }
+
+        h3 {
+            font-size: 18px;
+            line-height: 1.5;
+            font-weight:400;
+        }
+
+        body {
+            font-size: 12px;
+            line-height: 1.0;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True
+    )
+
+# Title & Subtitle
+heading = '''
+    <h1>Germination Calculator</h1>
+    <h2>Calculate the number of seeds you should plant</h2>
+    '''
+st.markdown(heading, unsafe_allow_html=True)
+st.markdown('#####')
+
+# intput seedlings
+row1 = st.columns([0.7, 0.2, 0.1])
+
+with row1[0]:
+    prompt1 = '''
+        <h3>Enter the number of seedlings you want</h3>
+        <body>Any numbers larger than 250 will take exponentially longer to compute</body>
+        '''
+    st.markdown(prompt1, unsafe_allow_html=True)
+    with row1[1]:
+        st.markdown('')
+        desired_plants = st.number_input('Enter the number of seedlings you want', min_value=1, max_value=1000, value=10, label_visibility='collapsed')
+
+st.markdown('######')
+
+# input germination rate
+row2 = st.columns([0.7, 0.2, 0.1])
+with row2[0]:
+    prompt2 = '''
+        <h3>Enter the germination rate of the seeds</h3>
+        <body>If 60%, enter 0.60</body>
+        '''
+    st.markdown(prompt2, unsafe_allow_html=True)
+    with row2[1]:
+        st.markdown('')
+        germination_rate = st.number_input('Enter the germination rate of the seeds', min_value=0.0, max_value=1.0, value=0.6, label_visibility='collapsed')
+
+st.markdown('######')
+
+# input confidence interval
+row3 = st.columns([0.7, 0.2, 0.1])
+with row3[0]:
+    prompt3 = '''
+        <h3>Enter the confidence interval</h3>
+        <body>Recommended: 95%. The closer to 100%, the slower you will get your result.</body>
+        '''
+    st.markdown(prompt3, unsafe_allow_html=True)
+    with row3[1]:
+        st.markdown('')
+        confidence_interval = st.number_input('Enter the confidence interval', min_value=0.0, max_value=1.0, value=0.95, label_visibility='collapsed')
+
+st.markdown('###')
 
 if st.button("Get your estimated number of seeds to plant"):
-    seeds, final_probability = get_seed_count(germination_rate, desired_plants, confidence_interval)
-    st.write(f"You should plant {seeds} seeds to have a {final_probability*100}% chance of getting {desired_plants} seedlings.")
+    try:
+        seeds, final_probability = get_seed_count(germination_rate, desired_plants, confidence_interval)
 
+        st.markdown('')
+
+        response_row = st.columns([0.7, 0.2, 0.1])
+        with response_row[0]:
+            response1 = f'''
+                <h3 style="
+                    color: green;
+                    font-size: 17px;
+                    font-weight: 500;
+                    line-height: 2.0;">
+                To have a {round(final_probability*100, 2)}% chance of getting \
+                {desired_plants} seedlings, you should plant:
+                </h3>
+                '''
+            st.markdown(response1, unsafe_allow_html=True)
+            with response_row[1]:
+                response2 = f'''
+                    <p style="
+                        color: darkred;
+                        background-color: white;
+                        border: 1px solid black;
+                        line-height: 2.0;
+                        font-size: 24px;
+                        text-align: center;">
+                    {seeds} seeds
+                    </p>
+                    '''
+                st.markdown(response2, unsafe_allow_html=True)
+    except:
+        st.markdown('Sorry, an unknown error occurred. If the error continues, please email the developer at emily@emilycardwell.com')
 
 def layout(*args):
 
