@@ -49,7 +49,7 @@ st.markdown(
             font-size: 18px;
             font-style: italic;
             font-weight:300;
-            line-height: 0.5;
+            line-height: 1.0;
             color: darkgreen;
         }
 
