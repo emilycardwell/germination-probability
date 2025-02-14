@@ -46,7 +46,7 @@ st.markdown(
 
         h2 {
             text-align: center;
-            font-size: 16px;
+            font-size: 14px;
             font-style: italic;
             font-weight:300;
             line-height: 1.0;
