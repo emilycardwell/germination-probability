@@ -46,7 +46,7 @@ st.markdown(
 
         h2 {
             text-align: center;
-            font-size: 18px;
+            font-size: 16px;
             font-style: italic;
             font-weight:300;
             line-height: 1.0;
@@ -55,7 +55,7 @@ st.markdown(
 
         h3 {
             font-size: 18px;
-            line-height: 1.5;
+            line-height: 1.2;
             font-weight:400;
         }
 
@@ -77,7 +77,7 @@ st.markdown(heading, unsafe_allow_html=True)
 st.markdown('#####')
 
 # intput seedlings
-row1 = st.columns([0.7, 0.2, 0.1])
+row1 = st.columns([0.7, 0.1, 0.2])
 
 with row1[0]:
     prompt1 = '''
@@ -85,35 +85,35 @@ with row1[0]:
         <body>Any numbers larger than 250 will take exponentially longer to compute</body>
         '''
     st.markdown(prompt1, unsafe_allow_html=True)
-    with row1[1]:
+    with row1[2]:
         st.markdown('')
         desired_plants = st.number_input('Enter the number of seedlings you want', min_value=1, max_value=1000, value=10, label_visibility='collapsed')
 
 st.markdown('######')
 
 # input germination rate
-row2 = st.columns([0.7, 0.2, 0.1])
+row2 = st.columns([0.7, 0.1, 0.2])
 with row2[0]:
     prompt2 = '''
         <h3>Enter the germination rate of the seeds</h3>
         <body>If 60%, enter 0.60</body>
         '''
     st.markdown(prompt2, unsafe_allow_html=True)
-    with row2[1]:
+    with row2[2]:
         st.markdown('')
         germination_rate = st.number_input('Enter the germination rate of the seeds', min_value=0.0, max_value=1.0, value=0.6, label_visibility='collapsed')
 
 st.markdown('######')
 
 # input confidence interval
-row3 = st.columns([0.7, 0.2, 0.1])
+row3 = st.columns([0.7, 0.1, 0.2])
 with row3[0]:
     prompt3 = '''
-        <h3>Enter the confidence interval</h3>
+        <h3>Enter the minimum confidence interval</h3>
         <body>Recommended: 95%. The closer to 100%, the slower you will get your result.</body>
         '''
     st.markdown(prompt3, unsafe_allow_html=True)
-    with row3[1]:
+    with row3[2]:
         st.markdown('')
         confidence_interval = st.number_input('Enter the confidence interval', min_value=0.0, max_value=1.0, value=0.95, label_visibility='collapsed')
 
@@ -125,7 +125,7 @@ if st.button("Get your estimated number of seeds to plant"):
 
         st.markdown('')
 
-        response_row = st.columns([0.7, 0.2, 0.1])
+        response_row = st.columns([0.7, 0.1, 0.2])
         with response_row[0]:
             response1 = f'''
                 <h3 style="
@@ -138,7 +138,7 @@ if st.button("Get your estimated number of seeds to plant"):
                 </h3>
                 '''
             st.markdown(response1, unsafe_allow_html=True)
-            with response_row[1]:
+            with response_row[2]:
                 response2 = f'''
                     <p style="
                         color: darkred;
@@ -152,7 +152,7 @@ if st.button("Get your estimated number of seeds to plant"):
                     '''
                 st.markdown(response2, unsafe_allow_html=True)
     except:
-        st.markdown('Sorry, an unknown error occurred. If the error continues, please email the developer at emily@emilycardwell.com')
+        st.markdown('Sorry, an unknown error occurred. If the error continues, please send an email to emily@emilycardwell.com')
 
 def layout(*args):
 
